@@ -4,6 +4,7 @@ import { Box, Button, Text, Flex, Heading, Table, Th, Thead, Tr, Checkbox, Icon,
 import React from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { Header } from '../../components/Header';
+import Pagination from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
 
 
@@ -47,11 +48,11 @@ export default function UserList() {
                                 <Td>
                                     <Box>
                                         <Text fontWeight="bold">Augusto Leite</Text>
-                                        <Text color="gray.300" fontSize="sm" fontWeight="bold">augusto@mailcom</Text>
+                                        <Text color="gray.300" fontSize="sm" >augusto@mailcom</Text>
                                     </Box>
                                 </Td>
                                 <Td>04 de Abril, 2020</Td>
-                                <Td>
+                                <Td textAlign="right">
                                     <Button
                                     as="a"
                                     size="sm"
@@ -65,6 +66,8 @@ export default function UserList() {
                             </Tr>
                         </Tbody>
                     </Table>
+
+                    <Pagination />
                 </Box>
             </Flex>
         </Box>
