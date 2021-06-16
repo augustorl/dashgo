@@ -1,9 +1,10 @@
-import { Flex, Text, Icon, Input, HStack} from '@chakra-ui/react'
-import { RiNotificationLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri'
-import { Logo } from './Header/Logo'
-import { NotificationsNav } from './Header/NotificationsNav'
-import { Profile } from './Header/Profile'
-import { SearchBox } from './Header/SearchBox'
+import { Flex } from "@chakra-ui/react";
+import React from "react";
+import { Logo } from "./Logo";
+import { NotificationsNav } from "./NotificationsNav";
+import { Profile } from "./Profile";
+import { SearchBox } from "./SearchBox";
+
 
 export function Header() {
     return (
@@ -18,13 +19,14 @@ export function Header() {
             align="center"
         >
             <Logo/>
-            <SearchBox />
 
+            <SearchBox />
 
             <Flex align="center" ml="auto">   
                 <NotificationsNav/>
                 <Profile/>
             </Flex>
+
         </Flex>
 
     )
