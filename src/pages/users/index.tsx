@@ -1,6 +1,7 @@
 
 
 import { Box, Button, Text, Flex, Heading, Table, Th, Thead, Tr, Checkbox, Icon, Tbody, Td, useBreakpointValue } from '@chakra-ui/react';
+import Link from 'next/link';
 import React from 'react';
 import { RiAddLine } from 'react-icons/ri';
 import { Header } from '../../components/Header';
@@ -10,7 +11,7 @@ import { Sidebar } from '../../components/Sidebar';
 
 export default function UserList() {
     const isDesktop = useBreakpointValue({
-        base : false,
+        base: false,
         lg: true,
     });
 
@@ -29,15 +30,18 @@ export default function UserList() {
                     <Flex mb="8" justify="space-between" align="center">
                         <Heading size="lg" fontWeight="normal">Usuários</Heading>
 
-                        <Button  as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine} fontSize="20" />}>
-                            Criar novo
-                        </Button>
+
+                        <Link href="/users/create" passHref>
+                            <Button as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine} fontSize="20" />}>
+                                Criar novo
+                            </Button>
+                        </Link>
 
                     </Flex>
                     <Table colorScheme="whiteAlpha">
                         <Thead>
                             <Tr>
-                                <Th px={["4", "4","6"]}>
+                                <Th px={["4", "4", "6"]}>
                                     <Checkbox colorScheme="pink" />
                                 </Th>
                                 <Th>Usuário</Th>
@@ -47,7 +51,7 @@ export default function UserList() {
                         </Thead>
                         <Tbody>
                             <Tr>
-                                <Td px={["4", "4","6"]}>
+                                <Td px={["4", "4", "6"]}>
                                     <Checkbox colorScheme="pink" />
                                 </Td>
                                 <Td>
@@ -56,7 +60,7 @@ export default function UserList() {
                                         <Text color="gray.300" fontSize="sm" >augusto@mailcom</Text>
                                     </Box>
                                 </Td>
-                                {isDesktop && <Td>04 de Abril, 2020</Td> }
+                                {isDesktop && <Td>04 de Abril, 2020</Td>}
                             </Tr>
                         </Tbody>
                     </Table>
