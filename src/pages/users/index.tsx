@@ -38,6 +38,7 @@ export default function UserList() {
                                 </Th>
                                 <Th>Usuário</Th>
                                 <Th>Criado em</Th>
+                                <Th w="8"></Th>
                             </Tr>
                         </Thead>
                         <Tbody>
