@@ -44,7 +44,7 @@ export default function SignIn() {
         flexDir="column"
       >
         <Stack spacing="4">
-          <Input name="email" type="email" label="E-mail" {... register("email",)} error={errors.email}  />
+          <Input name="email" type="email" label="E-mail" {... register("email")} error={errors.email}  />
           <Input name="password" type="password" error={errors.password} label="Senha"{... register("password")}/>
         </Stack>
         <Button isLoading={formState.isSubmitting} size="lg" type="submit" colorScheme="pink" mt="6">Entrar</Button>

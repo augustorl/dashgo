@@ -5,11 +5,39 @@ import Link from 'next/link';
 import React from 'react';
 import { Input } from '../../components/Form/Input';
 import { Header } from '../../components/Header';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Sidebar } from '../../components/Sidebar';
 
 
-export default function UserCreate() {
 
+type SignUpFormData = {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  };
+  
+const signUpFormSchema = yup.object().shape({
+    name: yup.string().required('O Nome é obrigatório'),
+    email: yup.string().required('O E-mail é obrigatório.').email('O E-mail deve ser válido'),
+    password: yup.string().required('A senha obrigatória.').min(6, 'Mínimo de 6 caracteres'),
+    password_confirm: yup.string().oneOf([null, yup.ref('password')], 'As senhas devem ser idênticas!')
+});
+
+export default function UserCreate() {
+    const {register, handleSubmit, formState} = useForm({
+        resolver: yupResolver(signUpFormSchema)
+      });
+    
+    const { errors } = formState;
+
+    const handleSignUp: SubmitHandler<SignUpFormData> = async (signUpData) => {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        console.log(signUpData);
+    }
     return (
         <Box>
             <Header />
@@ -17,6 +45,8 @@ export default function UserCreate() {
                 <Sidebar />
 
                 <Box
+                    as="form"
+                    onSubmit={handleSubmit(handleSignUp)}
                     flex="1"
                     borderRadius={8}
                     bg="gray.800"
@@ -27,12 +57,36 @@ export default function UserCreate() {
 
                     <VStack spacing="8">
                         <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
-                            <Input name="name" label="Nome Completo" />
-                            <Input name="email" label="E-mail" />
+                            <Input
+                             name="name"
+                             label="Nome Completo"
+                             {... register("name")}
+                             error={errors.name}
+                             />
+
+                            <Input 
+                             name="email" 
+                             label="E-mail"
+                             {... register("email")}
+                             error={errors.email}
+                            />
                         </SimpleGrid>
+
                         <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
-                            <Input name="password" type="password" label="Senha" />
-                            <Input name="password_confirm" type="password" label="Confirmar senha" />
+                            <Input
+                             name="password"
+                             type="password"
+                             {... register("password")}
+                             label="Senha"
+                             error={errors.password}
+                            />
+                            <Input
+                             name="password_confirm"
+                             {... register("password_confirm")}
+                             type="password"
+                             label="Confirmar senha"
+                             error={errors.password_confirm}
+                            />
                         </SimpleGrid>
                     </VStack>
 
@@ -42,7 +96,13 @@ export default function UserCreate() {
                                 <Button as="a" colorScheme="whiteAlpha">Cancelar</Button>
                             </Link>
 
-                            <Button colorScheme="pink">Salvar</Button>
+                            <Button
+                             type="submit"
+                             colorScheme="pink"
+                             isLoading={formState.isSubmitting}
+                            >
+                                Salvar
+                            </Button>
                         </HStack>
                     </Flex>
                 </Box>
