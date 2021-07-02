@@ -12,9 +12,22 @@ import { useQuery } from 'react-query';
 export default function UserList() {
     const { data, isLoading, error } = useQuery('users', async () => {
         const response = await fetch('http://localhost:3000/api/users');
-        const data = response.json();
+        const data = await response.json();
 
-        return data;
+        const users = data.users.map(user => {
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                })
+            }
+        })
+
+        return users;
     });
 
 
@@ -60,30 +73,35 @@ export default function UserList() {
                             <Table colorScheme="whiteAlpha">
                                 <Thead>
                                     <Tr>
-                                        <Th px={["4", "4", "6"]}>
+                                        <Th px={["4", "4", "6"]} color="gray.300" width="8">
                                             <Checkbox colorScheme="pink" />
                                         </Th>
                                         <Th>Usuário</Th>
-                                        {isDesktop && <Th>Criado em</Th>}
+                                        {isDesktop && <Th>Data de cadastro</Th>}
                                         <Th w="8"></Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
-                                    <Tr>
-                                        <Td px={["4", "4", "6"]}>
-                                            <Checkbox colorScheme="pink" />
-                                        </Td>
-                                        <Td>
-                                            <Box>
-                                                <Text fontWeight="bold">Augusto Leite</Text>
-                                                <Text color="gray.300" fontSize="sm" >augusto@mailcom</Text>
-                                            </Box>
-                                        </Td>
-                                        {isDesktop && <Td>04 de Abril, 2020</Td>}
-                                    </Tr>
+                                    {data.map(user => {
+                                        return (
+                                            <Tr key={user.id}>
+                                                <Td px={["4", "4", "6"]}>
+                                                    <Checkbox colorScheme="pink" />
+                                                </Td>
+                                                <Td>
+                                                    <Box>
+                                                        <Link href="#">
+                                                            <Text fontWeight="bold">{user.name}</Text>
+                                                        </Link>
+                                                        <Text fontSize="sm" color="gray.300">{user.email}</Text>
+                                                    </Box>
+                                                </Td>
+                                                {isDesktop && <Td>{user.createdAt}</Td>}
+                                            </Tr>
+                                        )
+                                    })}
                                 </Tbody>
                             </Table>
-
                             <Pagination />
                         </>
                     )}
