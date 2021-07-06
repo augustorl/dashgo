@@ -2,16 +2,16 @@
 
 import { Box, Button, Text, Flex, Heading, Table, Th, Thead, Tr, Checkbox, Icon, Tbody, Td, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { RiAddLine } from 'react-icons/ri';
 import { Header } from '../../components/Header';
-import Pagination from '../../components/Pagination';
+import { Pagination } from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
 import { useUsers } from '../../services/hooks/useUsers';
 
 export default function UserList() {
-    const { data, isLoading, isFetching, error} = useUsers()
-
+    const { data, isLoading, isFetching, error} = useUsers();
+    const [page, setPage] = useState(1);
     const isDesktop = useBreakpointValue({
         base: false,
         lg: true,
@@ -87,7 +87,11 @@ export default function UserList() {
                                     })}
                                 </Tbody>
                             </Table>
-                            <Pagination />
+                            <Pagination 
+                                totalCountOfRegisters={100}
+                                currentPage={page}
+                                onPageChange={setPage}
+                            />
                         </>
                     )}
                 </Box>
