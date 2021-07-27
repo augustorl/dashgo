@@ -9,6 +9,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Sidebar } from '../../components/Sidebar';
+import { useMutation } from 'react-query';
+import { api } from '../../services/api';
 
 
 
@@ -29,14 +31,23 @@ const signUpFormSchema = yup.object().shape({
 export default function UserCreate() {
     const {register, handleSubmit, formState} = useForm({
         resolver: yupResolver(signUpFormSchema)
-      });
+    });
     
+    const createUser = useMutation(async(user: SignUpFormData) => {
+        const response = await api.post('users', {
+            user: {
+                ...user,
+                created_at: new Date(),
+            }
+        })
+
+        return response.data.user;
+    });
+
     const { errors } = formState;
 
     const handleSignUp: SubmitHandler<SignUpFormData> = async (signUpData) => {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        console.log(signUpData);
+        await createUser.mutateAsync(signUpData)
     }
     return (
         <Box>
