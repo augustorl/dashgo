@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Sidebar } from '../../components/Sidebar';
 import { useMutation } from 'react-query';
 import { api } from '../../services/api';
+import { queryClient } from '../../services/queryClient';
+import { useRouter } from 'next/router';
 
 
 
@@ -19,8 +21,8 @@ type SignUpFormData = {
     email: string;
     password: string;
     password_confirmation: string;
-  };
-  
+};
+
 const signUpFormSchema = yup.object().shape({
     name: yup.string().required('O Nome é obrigatório'),
     email: yup.string().required('O E-mail é obrigatório.').email('O E-mail deve ser válido'),
@@ -29,11 +31,13 @@ const signUpFormSchema = yup.object().shape({
 });
 
 export default function UserCreate() {
-    const {register, handleSubmit, formState} = useForm({
+    const router = useRouter();
+
+    const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(signUpFormSchema)
     });
-    
-    const createUser = useMutation(async(user: SignUpFormData) => {
+
+    const createUser = useMutation(async (user: SignUpFormData) => {
         const response = await api.post('users', {
             user: {
                 ...user,
@@ -42,12 +46,18 @@ export default function UserCreate() {
         })
 
         return response.data.user;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('users')
+        }
     });
 
     const { errors } = formState;
 
     const handleSignUp: SubmitHandler<SignUpFormData> = async (signUpData) => {
         await createUser.mutateAsync(signUpData)
+
+        router.push('/users');
     }
     return (
         <Box>
@@ -69,34 +79,34 @@ export default function UserCreate() {
                     <VStack spacing="8">
                         <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
                             <Input
-                             name="name"
-                             label="Nome Completo"
-                             {... register("name")}
-                             error={errors.name}
-                             />
+                                name="name"
+                                label="Nome completo"
+                                error={formState.errors.name}
+                                {...register('name')}
+                            />
 
-                            <Input 
-                             name="email" 
-                             label="E-mail"
-                             {... register("email")}
-                             error={errors.email}
+                            <Input
+                                name="email"
+                                label="E-mail"
+                                {...register("email")}
+                                error={errors.email}
                             />
                         </SimpleGrid>
 
                         <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
                             <Input
-                             name="password"
-                             type="password"
-                             {... register("password")}
-                             label="Senha"
-                             error={errors.password}
+                                name="password"
+                                type="password"
+                                {...register("password")}
+                                label="Senha"
+                                error={errors.password}
                             />
                             <Input
-                             name="password_confirm"
-                             {... register("password_confirm")}
-                             type="password"
-                             label="Confirmar senha"
-                             error={errors.password_confirm}
+                                name="password_confirm"
+                                {...register("password_confirm")}
+                                type="password"
+                                label="Confirmar senha"
+                                error={errors.password_confirm}
                             />
                         </SimpleGrid>
                     </VStack>
@@ -108,9 +118,9 @@ export default function UserCreate() {
                             </Link>
 
                             <Button
-                             type="submit"
-                             colorScheme="pink"
-                             isLoading={formState.isSubmitting}
+                                type="submit"
+                                colorScheme="pink"
+                                isLoading={formState.isSubmitting}
                             >
                                 Salvar
                             </Button>
